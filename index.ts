@@ -1,12 +1,27 @@
-import express from 'express';
-const app = express();
+import { ApolloServer, gql } from 'apollo-server';
 
-app.get('/ping', (req, res) => {
-  res.send('pong');
+const typeDefs = gql`
+  type Book {
+    title: String!
+  }
+  type Query {
+    allBooks: [Book!]!
+  }
+`;
+
+const resolvers = {
+  Query: {
+    allBooks: async (root: any, args: any) => {
+      return [{ title: 'book1' }, { title: 'book2' }];
+    },
+  },
+};
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
 });
 
-const PORT = 3001;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+server.listen().then(({ url }: { url: any }) => {
+  console.log(`Server ready at ${url}`);
 });
