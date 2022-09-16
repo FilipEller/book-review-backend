@@ -1,15 +1,17 @@
 import { ApolloServer, gql } from 'apollo-server';
-import { books, authors } from './data';
+import { authors } from './util/data';
+import { Book } from './models';
+
+// authors: [String!]!
+// categories: [String]!
 
 const typeDefs = gql`
   type Book {
     id: String!
     title: String!
     description: String
-    authors: [String!]!
     language: String!
     publishedDate: String
-    categories: [String]!
     pageCount: Int
     thumbnail: String
     smallThumbnail: String
@@ -26,6 +28,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     allBooks: async (root: any, args: any) => {
+      const books = await Book.findAll();
       return books;
     },
     allAuthors: async (root: any, args: any) => {
