@@ -1,9 +1,11 @@
 import { sequelize } from './db';
-import { Book } from '../models';
-import { books } from './data';
+import { Book, User } from '../models';
+import { books, users } from './data';
 
 const main = async () => {
   await sequelize.sync();
+  Book.destroy({ where: {}, truncate: true });
+  User.destroy({ where: {}, truncate: true });
   await Promise.all(
     books.map(async (b) => {
       const {
@@ -32,7 +34,16 @@ const main = async () => {
       });
     })
   );
-  console.log('books added');
+  console.log('Books added');
+  await Promise.all(
+    users.map(async (user) => {
+      const { username, name, email } = user;
+      return User.create({ username, name, email });
+    })
+  );
+  console.log('Users added');
+  sequelize.close();
+  process.exit(0);
 };
 
 main();

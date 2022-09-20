@@ -295,14 +295,13 @@ const books = [
 ];
 
 const authors = [
-  { name: 'J.K. Rowling' },
+  { name: 'J. K. Rowling' },
   { name: 'Daniel H. Nexon' },
   { name: 'Iver B. Neumann' },
   { name: 'William Irwin' },
   { name: 'Gregory Bassham' },
   { name: 'Lana A. Whited' },
   { name: 'Neil Mulholland' },
-  { name: 'J. K. Rowling' },
   { name: 'Jaana Kapari' },
   { name: 'Connie Neal' },
   { name: 'Tanis Gray' },
@@ -314,4 +313,10 @@ const authors = [
   { name: 'Beatrice Groves' },
 ];
 
-export { books, authors };
+const users = [
+  { username: 'erik', name: 'Erik Erikson', email: 'erik@gmail.com' },
+  { username: 'dante', name: 'Dante Alighieri', email: 'dante@gmail.com' },
+  { username: 'mary', name: 'Mary Poppins', email: 'mary@gmail.com' },
+];
+
+export { books, authors, users };
