@@ -1,6 +1,5 @@
 import { ApolloServer, gql } from 'apollo-server';
-import { authors } from './util/data';
-import { Book, User } from './models';
+import { Book, User, Author } from './models';
 
 // authors: [String!]!
 // categories: [String]!
@@ -39,6 +38,7 @@ const resolvers = {
       return books;
     },
     authors: async (root: any, args: any) => {
+      const authors = await Author.findAll();
       return authors;
     },
     users: async (root: any, args: any) => {

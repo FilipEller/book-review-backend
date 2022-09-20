@@ -1,6 +1,6 @@
 import { sequelize } from './db';
-import { Book, User } from '../models';
-import { books, users } from './data';
+import { Book, User, Author } from '../models';
+import { books, users, authors } from './data';
 
 const main = async () => {
   await sequelize.sync();
@@ -42,6 +42,13 @@ const main = async () => {
     })
   );
   console.log('Users added');
+  await Promise.all(
+    authors.map(async (author) => {
+      const { name } = author;
+      return Author.create({ name });
+    })
+  );
+  console.log('Authors added');
   sequelize.close();
   process.exit(0);
 };
