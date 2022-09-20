@@ -1,6 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server';
 import { authors } from './util/data';
-import { Book } from './models';
+import { Book, User } from './models';
 
 // authors: [String!]!
 // categories: [String]!
@@ -20,19 +20,30 @@ const typeDefs = gql`
     name: String!
   }
   type Query {
-    allBooks: [Book!]!
-    allAuthors: [Author!]!
+    books: [Book!]!
+    authors: [Author!]!
+    users: [User!]!
+  }
+  type User {
+    id: ID!
+    username: String!
+    email: String!
+    name: String!
   }
 `;
 
 const resolvers = {
   Query: {
-    allBooks: async (root: any, args: any) => {
+    books: async (root: any, args: any) => {
       const books = await Book.findAll();
       return books;
     },
-    allAuthors: async (root: any, args: any) => {
+    authors: async (root: any, args: any) => {
       return authors;
+    },
+    users: async (root: any, args: any) => {
+      const books = await User.findAll();
+      return books;
     },
   },
 };
