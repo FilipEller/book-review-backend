@@ -27,11 +27,16 @@ const typeDefs = gql`
   type Token {
     token: String!
   }
+  type Shelf {
+    id: String!
+    name: String!
+  }
   type Query {
     books: [Book!]!
     authors: [Author!]!
     users: [User!]!
     me: User
+    shelves: [Shelf!]!
   }
   type Mutation {
     createUser(username: String!, name: String!, email: String!): User
