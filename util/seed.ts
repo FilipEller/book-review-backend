@@ -1,11 +1,14 @@
 import { sequelize } from './db';
-import { Book, User, Author } from '../models';
-import { books, users, authors } from './data';
+import { Book, User, Author, Shelf, ShelfBook } from '../models';
+import { books, users, authors, shelves, shelfBooks } from './data';
 
 const main = async () => {
   await sequelize.sync();
   Book.destroy({ where: {}, truncate: true });
   User.destroy({ where: {}, truncate: true });
+  Author.destroy({ where: {}, truncate: true });
+  Shelf.destroy({ where: {}, truncate: true });
+  ShelfBook.destroy({ where: {}, truncate: true });
   await Promise.all(
     books.map(async (b) => {
       const {
@@ -49,6 +52,21 @@ const main = async () => {
     })
   );
   console.log('Authors added');
+  await Promise.all(
+    shelves.map(async (shelf) => {
+      const { name, userId } = shelf;
+      return Shelf.create({ name, userId });
+    })
+  );
+  console.log('Shelves added');
+  await Promise.all(
+    shelfBooks.map(async (shelfBook) => {
+      const { shelfId, bookId } = shelfBook;
+      console.log({ shelfId, bookId });
+      return ShelfBook.create({ shelfId, bookId });
+    })
+  );
+  console.log('Books added to shelves');
   sequelize.close();
   process.exit(0);
 };

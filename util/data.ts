@@ -319,4 +319,18 @@ const users = [
   { username: 'mary', name: 'Mary Poppins', email: 'mary@gmail.com' },
 ];
 
-export { books, authors, users };
+const shelves = [
+  { name: 'read', userId: 1 },
+  { name: 'want-to-read', userId: 1 },
+  { name: 'did-not-finish', userId: 2 },
+];
+
+const shelfBooks = [
+  { shelfId: 1, bookId: 'u7fUDAAAQBAJ' },
+  { shelfId: 1, bookId: '8P8nDwAAQBAJ' },
+  { shelfId: 2, bookId: 'u7fUDAAAQBAJ' },
+  { shelfId: 2, bookId: '8P8nDwAAQBAJ' },
+  { shelfId: 2, bookId: 'sKW7u4786yUC' },
+];
+
+export { books, authors, users, shelves, shelfBooks };

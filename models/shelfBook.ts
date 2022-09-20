@@ -2,29 +2,31 @@ import { Model, DataTypes } from 'sequelize';
 
 import { sequelize } from '../util/db';
 
-class Shelf extends Model {}
+class ShelfBook extends Model {}
 
-Shelf.init(
+ShelfBook.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    userId: {
+    shelfId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      // references: { model: 'shelves', key: 'id' },
+    },
+    bookId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      // references: { model: 'books', key: 'id' },
     },
   },
   {
     sequelize,
     underscored: true,
-    modelName: 'shelf',
+    modelName: 'shelf_book',
   }
 );
 
-export default Shelf;
+export default ShelfBook;

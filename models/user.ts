@@ -1,8 +1,12 @@
-const { Model, DataTypes } = require('sequelize');
+import { Model, DataTypes } from 'sequelize';
+import { sequelize } from '../util/db';
 
-const { sequelize } = require('../util/db');
-
-class User extends Model {}
+class User extends Model {
+  id!: string;
+  username!: string;
+  email!: string;
+  name!: string;
+}
 
 User.init(
   {
