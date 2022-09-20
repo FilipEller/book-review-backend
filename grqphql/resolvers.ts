@@ -1,4 +1,8 @@
 import { Book, User, Author } from '../models';
+import { UserInputError } from 'apollo-server';
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET } from '../util/config';
+import getErrorMessage from '../util/getErrorMessage';
 
 const resolvers = {
   Query: {
@@ -11,8 +15,40 @@ const resolvers = {
       return authors;
     },
     users: async (root: any, args: any) => {
+      console.log('users queried');
       const books = await User.findAll();
       return books;
+    },
+    me: (root: any, args: any, context: any) => {
+      return context.currentUser;
+    },
+  },
+  Mutation: {
+    createUser: async (root: any, args: any) => {
+      try {
+        const user = await User.create({
+          username: args.username,
+          name: args.name,
+          email: args.email,
+        });
+        return user;
+      } catch (error: unknown) {
+        throw new UserInputError(getErrorMessage(error), {
+          invalidArgs: args,
+        });
+      }
+    },
+    login: async (root: any, args: any) => {
+      const user = await User.findOne({ where: { username: args.username } });
+      if (!(user && args.password === 'secret')) {
+        throw new UserInputError('Invalid credentials');
+      }
+      const userForToken = {
+        username: user.username,
+        id: user.id,
+      };
+      const token = jwt.sign(userForToken, JWT_SECRET);
+      return { token };
     },
   },
 };

@@ -13,7 +13,7 @@ const context = async ({ req }: { req: any }) => {
       const currentUser = await User.findByPk(decodedToken.id);
       return { currentUser };
     }
-    return {};
+    return { currentUser: null };
   } catch (error) {
     throw new UserInputError(getErrorMessage(error), {
       invalidArgs: req.headers.authorization,
