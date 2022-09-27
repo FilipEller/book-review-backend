@@ -1,4 +1,4 @@
-import { Book, User, Author } from '../models';
+import { Book, User, Author, Shelf } from '../models';
 import { UserInputError } from 'apollo-server';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../util/config';
@@ -14,9 +14,21 @@ const resolvers = {
       const authors = await Author.findAll();
       return authors;
     },
+    shelves: async (root: any, args: any) => {
+      const shelves = await Shelf.findAll({
+        include: {
+          model: User,
+        },
+      });
+      return shelves;
+    },
     users: async (root: any, args: any) => {
       console.log('users queried');
-      const books = await User.findAll();
+      const books = await User.findAll({
+        include: {
+          model: Shelf,
+        },
+      });
       return books;
     },
     me: (root: any, args: any, context: any) => {

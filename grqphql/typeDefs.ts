@@ -23,6 +23,7 @@ const typeDefs = gql`
     username: String!
     email: String!
     name: String!
+    shelves: [Shelf!]!
   }
   type Token {
     token: String!
@@ -30,6 +31,8 @@ const typeDefs = gql`
   type Shelf {
     id: String!
     name: String!
+    userId: String!
+    user: User
   }
   type Query {
     books: [Book!]!
