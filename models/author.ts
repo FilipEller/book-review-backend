@@ -19,6 +19,7 @@ Author.init(
   {
     sequelize,
     underscored: true,
+    timestamps: true,
     modelName: 'author',
   }
 );

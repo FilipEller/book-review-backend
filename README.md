@@ -1,2 +1,1 @@
-MySQL database deployed on
-https://app.planetscale.com/
+Uses a sqlite db.

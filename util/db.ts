@@ -1,12 +1,8 @@
 import { Sequelize } from 'sequelize';
-import { DATABASE_URL } from './config';
 
-const sequelize = new Sequelize(DATABASE_URL, {
-  dialectOptions: {
-    ssl: {
-      rejectUnauthorized: true,
-    },
-  },
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: './sqlite/database.db',
 });
 
 export { sequelize };

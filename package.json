@@ -7,7 +7,8 @@
     "start": "ts-node index.ts",
     "dev": "ts-node-dev index.ts",
     "ts-node": "ts-node",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "ts-node util/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "sequelize": "^6.22.1",
+    "sqlite3": "^5.1.1",
     "urlencode": "^1.1.0"
   },
   "devDependencies": {

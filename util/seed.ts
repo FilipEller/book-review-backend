@@ -3,12 +3,7 @@ import { Book, User, Author, Shelf, ShelfBook } from '../models';
 import { books, users, authors, shelves, shelfBooks } from './data';
 
 const main = async () => {
-  await sequelize.sync();
-  Book.destroy({ where: {}, truncate: true });
-  User.destroy({ where: {}, truncate: true });
-  Author.destroy({ where: {}, truncate: true });
-  Shelf.destroy({ where: {}, truncate: true });
-  ShelfBook.destroy({ where: {}, truncate: true });
+  await sequelize.sync({ force: true });
   await Promise.all(
     books.map(async (b) => {
       const {

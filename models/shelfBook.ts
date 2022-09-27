@@ -25,6 +25,7 @@ ShelfBook.init(
   {
     sequelize,
     underscored: true,
+    timestamps: true,
     modelName: 'shelf_book',
   }
 );

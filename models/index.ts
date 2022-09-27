@@ -10,10 +10,10 @@ import ShelfBook from './shelfBook';
 // Book.belongsToMany(Shelf, { through: ShelfBook });
 // Shelf.belongsToMany(Book, { through: ShelfBook });
 
-Book.sync({ force: true });
-User.sync({ force: true });
-Author.sync({ force: true });
-Shelf.sync({ force: true });
-ShelfBook.sync({ force: true });
+Book.sync();
+User.sync();
+Author.sync();
+Shelf.sync();
+ShelfBook.sync();
 
 export { Book, User, Author, Shelf, ShelfBook };
