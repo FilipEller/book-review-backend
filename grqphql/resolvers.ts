@@ -6,13 +6,22 @@ import getErrorMessage from '../util/getErrorMessage';
 import extBookService from '../services/extBooks';
 
 const resolvers = {
+  User: {
+    shelves: async (root: any) => {
+      const shelves = await Shelf.findAll({
+        where: {
+          userId: root.id,
+        },
+      });
+      return shelves;
+    }, // this is an n+1 problem when querying multiple users and their shelves
+    // though that should not be too common
+  },
   Query: {
     book: async (root: any, args: any) => {
       const book = await Book.findByPk(args.id);
-      console.log({ book });
       if (!book) {
         const extBook = await extBookService.fetchBook(args.id);
-        console.log({ extBook });
         return extBook;
       }
       return book;
@@ -39,11 +48,7 @@ const resolvers = {
       return shelves;
     },
     user: async (root: any, args: any) => {
-      const user = await User.findByPk(args.id, {
-        include: {
-          model: Shelf,
-        },
-      });
+      const user = await User.findByPk(args.id);
       return user;
     },
     users: async (root: any, args: any) => {

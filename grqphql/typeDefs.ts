@@ -34,6 +34,7 @@ const typeDefs = gql`
     name: String!
     userId: String!
     user: User
+    books: [Book!]!
   }
   type Query {
     book(id: ID!): Book
