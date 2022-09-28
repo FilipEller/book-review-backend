@@ -22,14 +22,17 @@ const resolvers = {
       });
       return shelves;
     },
-    users: async (root: any, args: any) => {
-      console.log('users queried');
-      const books = await User.findAll({
+    user: async (root: any, args: any) => {
+      const user = await User.findByPk(args.id, {
         include: {
           model: Shelf,
         },
       });
-      return books;
+      return user;
+    },
+    users: async (root: any, args: any) => {
+      const users = await User.findAll();
+      return users;
     },
     me: (root: any, args: any, context: any) => {
       return context.currentUser;

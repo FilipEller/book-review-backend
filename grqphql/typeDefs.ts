@@ -6,7 +6,7 @@ import { gql } from 'apollo-server';
 
 const typeDefs = gql`
   type Book {
-    id: String!
+    id: ID!
     title: String!
     description: String
     language: String!
@@ -16,6 +16,7 @@ const typeDefs = gql`
     smallThumbnail: String
   }
   type Author {
+    id: ID!
     name: String!
   }
   type User {
@@ -29,7 +30,7 @@ const typeDefs = gql`
     token: String!
   }
   type Shelf {
-    id: String!
+    id: ID!
     name: String!
     userId: String!
     user: User
@@ -38,6 +39,7 @@ const typeDefs = gql`
     books: [Book!]!
     authors: [Author!]!
     users: [User!]!
+    user(id: ID!): User
     me: User
     shelves: [Shelf!]!
   }
