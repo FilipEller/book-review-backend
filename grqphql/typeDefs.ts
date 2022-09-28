@@ -34,7 +34,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     user: User!
-    books: [Book]!
+    books: [Book!]!
   }
   type Review {
     id: ID!
