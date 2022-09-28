@@ -3,11 +3,18 @@ import { UserInputError } from 'apollo-server';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../util/config';
 import getErrorMessage from '../util/getErrorMessage';
+import extBookService from '../services/extBooks';
 
 const resolvers = {
   Query: {
     book: async (root: any, args: any) => {
       const book = await Book.findByPk(args.id);
+      console.log({ book });
+      if (!book) {
+        const extBook = await extBookService.fetchBook(args.id);
+        console.log({ extBook });
+        return extBook;
+      }
       return book;
     },
     books: async (root: any, args: any) => {
