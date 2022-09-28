@@ -14,6 +14,7 @@ const typeDefs = gql`
     pageCount: Int
     thumbnail: String
     smallThumbnail: String
+    shelves: [Shelf]!
   }
   type Author {
     id: ID!
@@ -32,9 +33,8 @@ const typeDefs = gql`
   type Shelf {
     id: ID!
     name: String!
-    userId: String!
     user: User
-    books: [Book!]!
+    books: [Book]!
   }
   type Query {
     book(id: ID!): Book

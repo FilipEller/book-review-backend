@@ -7,8 +7,8 @@ import ShelfBook from './shelfBook';
 User.hasMany(Shelf);
 Shelf.belongsTo(User);
 
-// Book.belongsToMany(Shelf, { through: ShelfBook });
-// Shelf.belongsToMany(Book, { through: ShelfBook });
+Book.belongsToMany(Shelf, { through: ShelfBook });
+Shelf.belongsToMany(Book, { through: ShelfBook });
 
 Book.sync();
 User.sync();

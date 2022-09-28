@@ -17,9 +17,23 @@ const resolvers = {
     }, // this is an n+1 problem when querying multiple users and their shelves
     // though that should not be too common
   },
+  // Shelf: {
+  //   books: async (root: any) => {
+  //     const books = await ShelfBook.findAll({
+  //       where: {
+  //         shelfId: root.id,
+  //       },
+  //       include: {
+  //         model: Book,
+  //       },
+  //     });
+  //     console.log({ books: books.map((x: any) => x.dataValues) });
+  //     return [];
+  //   },
+  // },
   Query: {
     book: async (root: any, args: any) => {
-      const book = await Book.findByPk(args.id);
+      const book = await Book.findByPk(args.id, { include: { model: Shelf } });
       if (!book) {
         const extBook = await extBookService.fetchBook(args.id);
         return extBook;
@@ -31,7 +45,7 @@ const resolvers = {
         const books = await extBookService.fetchBooks(args.query);
         return books;
       } else {
-        const books = await Book.findAll();
+        const books = await Book.findAll({ include: { model: Shelf } });
         return books;
       }
     },
@@ -41,9 +55,14 @@ const resolvers = {
     },
     shelves: async (root: any, args: any) => {
       const shelves = await Shelf.findAll({
-        include: {
-          model: User,
-        },
+        include: [
+          {
+            model: User,
+          },
+          {
+            model: Book,
+          },
+        ],
       });
       return shelves;
     },

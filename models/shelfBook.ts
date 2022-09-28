@@ -14,12 +14,12 @@ ShelfBook.init(
     shelfId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      // references: { model: 'shelves', key: 'id' },
+      references: { model: 'shelves', key: 'id' },
     },
     bookId: {
       type: DataTypes.STRING,
       allowNull: false,
-      // references: { model: 'books', key: 'id' },
+      references: { model: 'books', key: 'id' },
     },
   },
   {
