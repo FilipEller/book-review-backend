@@ -1,4 +1,4 @@
-import { Book, User, Author, Shelf } from '../models';
+import { Book, User, Author, Shelf, ShelfBook } from '../models';
 import { UserInputError } from 'apollo-server';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../util/config';
@@ -17,23 +17,33 @@ const resolvers = {
     }, // this is an n+1 problem when querying multiple users and their shelves
     // though that should not be too common
   },
-  // Shelf: {
-  //   books: async (root: any) => {
-  //     const books = await ShelfBook.findAll({
-  //       where: {
-  //         shelfId: root.id,
-  //       },
-  //       include: {
-  //         model: Book,
-  //       },
-  //     });
-  //     console.log({ books: books.map((x: any) => x.dataValues) });
-  //     return [];
-  //   },
-  // },
+  Shelf: {
+    books: async (root: any) => {
+      const shelfBooks = await ShelfBook.findAll({
+        where: { shelfId: root.id },
+        include: {
+          model: Book,
+        },
+      });
+      const books = shelfBooks.map((sb: any) => sb.book);
+      return books;
+    },
+  },
+  Book: {
+    shelves: async (root: any) => {
+      const shelfBooks = await ShelfBook.findAll({
+        where: { shelfId: root.id },
+        include: {
+          model: Shelf,
+        },
+      });
+      const shelves = shelfBooks.map((sb: any) => sb.shelf);
+      return shelves;
+    },
+  },
   Query: {
     book: async (root: any, args: any) => {
-      const book = await Book.findByPk(args.id, { include: { model: Shelf } });
+      const book = await Book.findByPk(args.id);
       if (!book) {
         const extBook = await extBookService.fetchBook(args.id);
         return extBook;
@@ -45,7 +55,7 @@ const resolvers = {
         const books = await extBookService.fetchBooks(args.query);
         return books;
       } else {
-        const books = await Book.findAll({ include: { model: Shelf } });
+        const books = await Book.findAll();
         return books;
       }
     },
@@ -58,9 +68,6 @@ const resolvers = {
         include: [
           {
             model: User,
-          },
-          {
-            model: Book,
           },
         ],
       });
