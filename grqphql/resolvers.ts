@@ -18,8 +18,13 @@ const resolvers = {
       return book;
     },
     books: async (root: any, args: any) => {
-      const books = await Book.findAll();
-      return books;
+      if (args.query) {
+        const books = await extBookService.fetchBooks(args.query);
+        return books;
+      } else {
+        const books = await Book.findAll();
+        return books;
+      }
     },
     authors: async (root: any, args: any) => {
       const authors = await Author.findAll();

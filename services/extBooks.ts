@@ -2,7 +2,6 @@ import axios from 'axios';
 import urlencode from 'urlencode';
 
 const extractBookData = (book: any) => {
-  console.log(book)
   const { id, volumeInfo } = book;
   const {
     title,
@@ -30,7 +29,7 @@ const extractBookData = (book: any) => {
 };
 
 const fetchBook = async (volumeId: string) => {
-  console.log('fetching', volumeId);
+  // console.log('fetching', volumeId);
   const result = await axios.get(
     `https://www.googleapis.com/books/v1/volumes/${urlencode(volumeId)}`
   );
@@ -38,7 +37,7 @@ const fetchBook = async (volumeId: string) => {
 };
 
 const fetchBooks = async (query: string) => {
-  console.log('fetching', query);
+  // console.log('fetching', query);
   const result = await axios.get(
     `https://www.googleapis.com/books/v1/volumes?q=${urlencode(
       query
