@@ -63,6 +63,16 @@ const resolvers = {
       const authors = await Author.findAll();
       return authors;
     },
+    shelf: async (root: any, args: any) => {
+      const shelf = await Shelf.findByPk(args.id, {
+        include: [
+          {
+            model: User,
+          },
+        ],
+      });
+      return shelf;
+    },
     shelves: async (root: any, args: any) => {
       const shelves = await Shelf.findAll({
         include: [

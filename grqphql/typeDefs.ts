@@ -33,7 +33,7 @@ const typeDefs = gql`
   type Shelf {
     id: ID!
     name: String!
-    user: User
+    user: User!
     books: [Book]!
   }
   type Query {
@@ -43,6 +43,7 @@ const typeDefs = gql`
     users: [User!]!
     user(id: ID!): User
     me: User
+    shelf(id: ID!): Shelf
     shelves: [Shelf!]!
   }
   type Mutation {
