@@ -28,6 +28,10 @@ const resolvers = {
       const books = shelfBooks.map((sb: any) => sb.book);
       return books;
     },
+    user: async (root: any) => {
+      const user = await User.findByPk(root.userId);
+      return user;
+    }, // solves nesting but adds more n+1
   },
   Book: {
     shelves: async (root: any) => {
