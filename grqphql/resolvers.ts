@@ -1,4 +1,4 @@
-import { Book, User, Author, Shelf, ShelfBook } from '../models';
+import { Book, User, Author, Shelf, ShelfBook, Review } from '../models';
 import { UserInputError } from 'apollo-server';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../util/config';
@@ -90,6 +90,12 @@ const resolvers = {
     users: async (root: any, args: any) => {
       const users = await User.findAll();
       return users;
+    },
+    reviews: async (root: any, args: any) => {
+      const reviews = await Review.findAll({
+        include: [{ model: User }, { model: Book }],
+      });
+      return reviews;
     },
     me: (root: any, args: any, context: any) => {
       return context.currentUser;

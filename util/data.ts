@@ -333,4 +333,12 @@ const shelfBooks = [
   { shelfId: 2, bookId: 'sKW7u4786yUC' },
 ];
 
-export { books, authors, users, shelves, shelfBooks };
+const reviews = [
+  { rating: 5, content: 'pretty good', bookId: 'u7fUDAAAQBAJ', userId: 1 },
+  { rating: 4, content: 'I liked it', bookId: '8P8nDwAAQBAJ', userId: 1 },
+  { rating: 3.5, content: 'funny book', bookId: 'u7fUDAAAQBAJ', userId: 2 },
+  { rating: 4, bookId: '8P8nDwAAQBAJ', userId: 2 },
+  { rating: 2.5, content: 'not impressed', bookId: 'sKW7u4786yUC', userId: 3 },
+];
+
+export { books, authors, users, shelves, shelfBooks, reviews };

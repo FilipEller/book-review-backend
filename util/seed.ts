@@ -1,6 +1,6 @@
 import { sequelize } from './db';
-import { Book, User, Author, Shelf, ShelfBook } from '../models';
-import { books, users, authors, shelves, shelfBooks } from './data';
+import { Book, User, Author, Shelf, ShelfBook, Review } from '../models';
+import { books, users, authors, shelves, shelfBooks, reviews } from './data';
 
 const main = async () => {
   await sequelize.sync({ force: true });
@@ -62,6 +62,14 @@ const main = async () => {
     })
   );
   console.log('Books added to shelves');
+  await Promise.all(
+    reviews.map(async (shelfBook) => {
+      const { rating, content, bookId, userId } = shelfBook;
+      console.log({ rating, content, bookId, userId });
+      return Review.create({ rating, content, bookId, userId });
+    })
+  );
+  console.log('Reviews added');
   sequelize.close();
   process.exit(0);
 };

@@ -36,6 +36,13 @@ const typeDefs = gql`
     user: User!
     books: [Book]!
   }
+  type Review {
+    id: ID!
+    rating: Float
+    content: String
+    user: User
+    book: Book
+  }
   type Query {
     book(id: ID!): Book
     books(query: String): [Book!]!
@@ -45,6 +52,7 @@ const typeDefs = gql`
     me: User
     shelf(id: ID!): Shelf
     shelves: [Shelf!]!
+    reviews: [Review!]!
   }
   type Mutation {
     createUser(username: String!, name: String!, email: String!): User
