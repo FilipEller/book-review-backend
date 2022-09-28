@@ -14,7 +14,7 @@ const typeDefs = gql`
     pageCount: Int
     thumbnail: String
     smallThumbnail: String
-    shelves: [Shelf]!
+    shelves: [Shelf!]!
   }
   type Author {
     id: ID!
