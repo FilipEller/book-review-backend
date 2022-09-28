@@ -6,6 +6,10 @@ import getErrorMessage from '../util/getErrorMessage';
 
 const resolvers = {
   Query: {
+    book: async (root: any, args: any) => {
+      const book = await Book.findByPk(args.id);
+      return book;
+    },
     books: async (root: any, args: any) => {
       const books = await Book.findAll();
       return books;
