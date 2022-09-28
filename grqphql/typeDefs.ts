@@ -15,6 +15,7 @@ const typeDefs = gql`
     thumbnail: String
     smallThumbnail: String
     shelves: [Shelf!]!
+    reviews: [Review!]!
   }
   type Author {
     id: ID!

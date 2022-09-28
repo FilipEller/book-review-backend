@@ -32,13 +32,18 @@ const resolvers = {
   Book: {
     shelves: async (root: any) => {
       const shelfBooks = await ShelfBook.findAll({
-        where: { shelfId: root.id },
-        include: {
-          model: Shelf,
-        },
+        where: { bookId: root.id },
+        include: { model: Shelf }, // the shelf has not populated user
       });
       const shelves = shelfBooks.map((sb: any) => sb.shelf);
       return shelves;
+    },
+    reviews: async (root: any) => {
+      const reviews = await Review.findAll({
+        where: { bookId: root.id },
+        include: { model: User },
+      });
+      return reviews;
     },
   },
   Query: {
