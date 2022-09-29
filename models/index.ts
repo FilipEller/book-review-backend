@@ -8,8 +8,8 @@ import Review from './review';
 User.hasMany(Shelf);
 Shelf.belongsTo(User);
 
-// Book.belongsToMany(Shelf, { through: ShelfBook });
-// Shelf.belongsToMany(Book, { through: ShelfBook });
+Book.belongsToMany(Shelf, { through: ShelfBook });
+Shelf.belongsToMany(Book, { through: ShelfBook });
 ShelfBook.belongsTo(Book);
 ShelfBook.belongsTo(Shelf);
 

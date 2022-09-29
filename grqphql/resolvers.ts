@@ -1,4 +1,4 @@
-import { Book, User, Author, Shelf, ShelfBook, Review } from '../models';
+import { Book, User, Author, Shelf, Review } from '../models';
 import { UserInputError } from 'apollo-server';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../util/config';
@@ -7,48 +7,21 @@ import extBookService from '../services/extBooks';
 
 const resolvers = {
   User: {
-    shelves: async (root: any) => {
-      const shelves = await Shelf.findAll({
-        where: {
-          userId: root.id,
-        },
-      });
-      return shelves;
-    }, // this is an n+1 problem when querying multiple users and their shelves
+    shelves: async (root: any) => await root.getShelves(),
+    // this is an n+1 problem when querying multiple users and their shelves
     // though that should not be too common
   },
   Shelf: {
-    books: async (root: any) => {
-      const shelfBooks = await ShelfBook.findAll({
-        where: { shelfId: root.id },
-        include: {
-          model: Book,
-        },
-      });
-      const books = shelfBooks.map((sb: any) => sb.book);
-      return books;
-    },
-    user: async (root: any) => {
-      const user = await User.findByPk(root.userId);
-      return user;
-    }, // solves nesting but adds more n+1
+    books: async (root: any) => await root.getBooks(),
+    user: async (root: any) => await root.getUser(), // solves nesting but adds more n+1
   },
   Book: {
-    shelves: async (root: any) => {
-      const shelfBooks = await ShelfBook.findAll({
-        where: { bookId: root.id },
-        include: { model: Shelf }, // the shelf has not populated user
-      });
-      const shelves = shelfBooks.map((sb: any) => sb.shelf);
-      return shelves;
-    },
-    reviews: async (root: any) => {
-      const reviews = await Review.findAll({
-        where: { bookId: root.id },
-        include: { model: User },
-      });
-      return reviews;
-    },
+    shelves: async (root: any) => await root.getShelves(),
+    reviews: async (root: any) => await root.getReviews(),
+  },
+  Review: {
+    user: async (root: any) => await root.getUser(),
+    book: async (root: any) => await root.getBook(),
   },
   Query: {
     book: async (root: any, args: any) => {
@@ -101,9 +74,7 @@ const resolvers = {
       return users;
     },
     reviews: async (root: any, args: any) => {
-      const reviews = await Review.findAll({
-        include: [{ model: User }, { model: Book }],
-      });
+      const reviews = await Review.findAll();
       return reviews;
     },
     me: (root: any, args: any, context: any) => {
