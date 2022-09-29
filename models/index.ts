@@ -10,8 +10,8 @@ Shelf.belongsTo(User);
 
 Book.belongsToMany(Shelf, { through: ShelfBook });
 Shelf.belongsToMany(Book, { through: ShelfBook });
-ShelfBook.belongsTo(Book);
-ShelfBook.belongsTo(Shelf);
+// ShelfBook.belongsTo(Book);
+// ShelfBook.belongsTo(Shelf);
 
 Book.hasMany(Review);
 Review.belongsTo(Book);
