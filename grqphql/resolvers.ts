@@ -41,21 +41,15 @@ const resolvers = {
         return books;
       }
     },
-    authors: async (root: any, args: any) => {
+    authors: async (root: any) => {
       const authors = await Author.findAll();
       return authors;
     },
     shelf: async (root: any, args: any) => {
-      const shelf = await Shelf.findByPk(args.id, {
-        include: [
-          {
-            model: User,
-          },
-        ],
-      });
+      const shelf = await Shelf.findByPk(args.id);
       return shelf;
     },
-    shelves: async (root: any, args: any) => {
+    shelves: async (root: any) => {
       const shelves = await Shelf.findAll({
         include: [
           {
@@ -69,11 +63,11 @@ const resolvers = {
       const user = await User.findByPk(args.id);
       return user;
     },
-    users: async (root: any, args: any) => {
+    users: async (root: any) => {
       const users = await User.findAll();
       return users;
     },
-    reviews: async (root: any, args: any) => {
+    reviews: async (root: any) => {
       const reviews = await Review.findAll();
       return reviews;
     },
