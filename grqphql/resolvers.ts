@@ -1,5 +1,5 @@
 import { Book, User, Author, Shelf, Review } from '../models';
-import { UserInputError } from 'apollo-server';
+import { UserInputError, AuthenticationError } from 'apollo-server';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../util/config';
 import getErrorMessage from '../util/getErrorMessage';
@@ -92,8 +92,8 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (parent: undefined, args: CreateUserArgs) => {
-      const { username, name, email } = args;
       try {
+        const { username, name, email } = args;
         const user = await User.create({
           username,
           name,
@@ -117,6 +117,24 @@ const resolvers = {
       };
       const token = jwt.sign(userForToken, JWT_SECRET);
       return { token };
+    },
+    createShelf: async (
+      parent: undefined,
+      { name }: { name: string },
+      context: AppContext
+    ) => {
+      const currentUser = context.currentUser;
+      if (!currentUser) {
+        throw new AuthenticationError('not authenticated');
+      }
+      try {
+        const shelf = await Shelf.create({ name, userId: currentUser.id });
+        return shelf;
+      } catch (error) {
+        throw new UserInputError(getErrorMessage(error), {
+          invalidArgs: { name },
+        });
+      }
     },
   },
 };
