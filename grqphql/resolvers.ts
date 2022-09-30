@@ -5,51 +5,66 @@ import { JWT_SECRET } from '../util/config';
 import getErrorMessage from '../util/getErrorMessage';
 import extBookService from '../services/extBooks';
 
+type CreateUserArgs = {
+  username: string;
+  name: string;
+  email: string;
+};
+
+type LoginArgs = {
+  username: string;
+  password: string;
+};
+
+interface AppContext {
+  currentUser: User | null;
+}
+
 const resolvers = {
   User: {
-    shelves: async (root: any) => await root.getShelves(),
+    shelves: async (parent: any) => await parent.getShelves(),
     // this is an n+1 problem when querying multiple users and their shelves
     // though that should not be too common
   },
   Shelf: {
-    books: async (root: any) => await root.getBooks(),
-    user: async (root: any) => await root.getUser(), // solves nesting but adds more n+1
+    books: async (parent: any) => await parent.getBooks(),
+    user: async (parent: any) => await parent.getUser(), // solves nesting but adds more n+1
   },
   Book: {
-    shelves: async (root: any) => await root.getShelves(),
-    reviews: async (root: any) => await root.getReviews(),
+    shelves: async (parent: any) => await parent.getShelves(),
+    reviews: async (parent: any) => await parent.getReviews(),
   },
   Review: {
-    user: async (root: any) => await root.getUser(),
-    book: async (root: any) => await root.getBook(),
+    user: async (parent: any) => await parent.getUser(),
+    book: async (parent: any) => await parent.getBook(),
   },
   Query: {
-    book: async (root: any, args: any) => {
-      const book = await Book.findByPk(args.id);
+    book: async (parent: undefined, { id }: { id: string }) => {
+      const book = await Book.findByPk(id);
       if (!book) {
-        const extBook = await extBookService.fetchBook(args.id);
+        const extBook = await extBookService.fetchBook(id);
         return extBook;
       }
       return book;
     },
-    books: async (root: any, args: any) => {
-      if (args.query) {
-        const books = await extBookService.fetchBooks(args.query);
+    books: async (parent: undefined, { query }: { query: string }) => {
+      if (query) {
+        const books = await extBookService.fetchBooks(query);
         return books;
       } else {
         const books = await Book.findAll();
         return books;
       }
     },
-    authors: async (root: any) => {
+    authors: async () => {
       const authors = await Author.findAll();
       return authors;
     },
-    shelf: async (root: any, args: any) => {
-      const shelf = await Shelf.findByPk(args.id);
+    shelf: async (parent: undefined, { id }: { id: string }) => {
+      const shelf = await Shelf.findByPk(id);
       return shelf;
     },
-    shelves: async (root: any) => {
+    shelves: async () => {
       const shelves = await Shelf.findAll({
         include: [
           {
@@ -59,29 +74,30 @@ const resolvers = {
       });
       return shelves;
     },
-    user: async (root: any, args: any) => {
-      const user = await User.findByPk(args.id);
+    user: async (parent: undefined, { id }: { id: string }) => {
+      const user = await User.findByPk(id);
       return user;
     },
-    users: async (root: any) => {
+    users: async () => {
       const users = await User.findAll();
       return users;
     },
-    reviews: async (root: any) => {
+    reviews: async () => {
       const reviews = await Review.findAll();
       return reviews;
     },
-    me: (root: any, args: any, context: any) => {
+    me: (parent: undefined, args: undefined, context: AppContext) => {
       return context.currentUser;
     },
   },
   Mutation: {
-    createUser: async (root: any, args: any) => {
+    createUser: async (parent: undefined, args: CreateUserArgs) => {
+      const { username, name, email } = args;
       try {
         const user = await User.create({
-          username: args.username,
-          name: args.name,
-          email: args.email,
+          username,
+          name,
+          email,
         });
         return user;
       } catch (error: unknown) {
@@ -90,7 +106,7 @@ const resolvers = {
         });
       }
     },
-    login: async (root: any, args: any) => {
+    login: async (parent: undefined, args: LoginArgs) => {
       const user = await User.findOne({ where: { username: args.username } });
       if (!(user && args.password === 'secret')) {
         throw new UserInputError('Invalid credentials');
