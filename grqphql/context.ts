@@ -1,11 +1,11 @@
 import getErrorMessage from '../util/getErrorMessage';
-
 import { UserInputError } from 'apollo-server';
 import { JWT_SECRET } from '../util/config';
 import User from '../models/User';
 import jwt from 'jsonwebtoken';
+import { TokenUserInfo, AppContext } from '../types';
 
-const getToken = (authorization: string) => {
+const getToken = (authorization: string): TokenUserInfo | null => {
   if (authorization.toLowerCase().startsWith('bearer ')) {
     const decodedToken: any = jwt.verify(
       authorization.substring(7),
@@ -17,7 +17,7 @@ const getToken = (authorization: string) => {
   }
 };
 
-const context = async ({ req }: { req: any }) => {
+const context = async ({ req }: { req: any }): Promise<AppContext> => {
   const getUser = async () => {
     try {
       const authorization = req.headers?.authorization || '';

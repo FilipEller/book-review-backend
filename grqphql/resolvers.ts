@@ -8,21 +8,7 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../util/config';
 import getErrorMessage from '../util/getErrorMessage';
 import extBookService from '../services/extBooks';
-
-type CreateUserArgs = {
-  username: string;
-  name: string;
-  email: string;
-};
-
-type LoginArgs = {
-  username: string;
-  password: string;
-};
-
-interface AppContext {
-  getUser: () => Promise<User | null>;
-}
+import { CreateUserArgs, LoginArgs, TokenUserInfo, AppContext } from '../types';
 
 // n+1 problems with mixins
 const resolvers = {
@@ -88,7 +74,7 @@ const resolvers = {
       if (!(user && args.password === 'secret')) {
         throw new UserInputError('Invalid credentials');
       }
-      const userForToken = {
+      const userForToken: TokenUserInfo = {
         username: user.username,
         id: user.id,
       };
