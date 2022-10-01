@@ -5,20 +5,36 @@ import { JWT_SECRET } from '../util/config';
 import User from '../models/User';
 import jwt from 'jsonwebtoken';
 
-const context = async ({ req }: { req: any }) => {
-  try {
-    const token = req.headers?.authorization || '';
-    if (token.toLowerCase().startsWith('bearer ')) {
-      const decodedToken: any = jwt.verify(token.substring(7), JWT_SECRET);
-      const currentUser = await User.findByPk(decodedToken.id);
-      return { currentUser };
-    }
-    return { currentUser: null };
-  } catch (error) {
-    throw new UserInputError(getErrorMessage(error), {
-      invalidArgs: req.headers.authorization,
-    });
+const getToken = (authorization: string) => {
+  if (authorization.toLowerCase().startsWith('bearer ')) {
+    const decodedToken: any = jwt.verify(
+      authorization.substring(7),
+      JWT_SECRET
+    );
+    return decodedToken;
+  } else {
+    return null;
   }
+};
+
+const context = async ({ req }: { req: any }) => {
+  const getUser = async () => {
+    try {
+      const authorization = req.headers?.authorization || '';
+      const token = getToken(authorization);
+      if (token) {
+        const { id } = token;
+        return User.findByPk(id);
+      } else {
+        return null;
+      }
+    } catch (error) {
+      throw new UserInputError(getErrorMessage(error), {
+        invalidArgs: req.headers.authorization,
+      });
+    }
+  };
+  return { getUser };
 };
 
 export default context;

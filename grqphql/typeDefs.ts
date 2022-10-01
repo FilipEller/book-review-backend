@@ -44,6 +44,11 @@ const typeDefs = gql`
     user: User
     book: Book
   }
+  type ShelfBook {
+    id: ID!
+    shelfId: Int!
+    bookId: String!
+  }
   type Query {
     book(id: ID!): Book
     books(query: String): [Book!]!
@@ -59,6 +64,7 @@ const typeDefs = gql`
     createUser(username: String!, name: String!, email: String!): User
     login(username: String!, password: String!): Token
     createShelf(name: String!): Shelf
+    addBookToShelf(bookId: String!, shelfId: String!): ShelfBook
   }
 `;
 
