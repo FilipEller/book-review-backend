@@ -11,7 +11,7 @@ export type LoginArgs = {
   password: string;
 };
 
-export type TokenUserInfo = {
+export type JwtUser = {
   username: string;
   id: string;
 };

@@ -3,32 +3,33 @@ import { UserInputError } from 'apollo-server';
 import { JWT_SECRET } from '../util/config';
 import User from '../models/User';
 import jwt from 'jsonwebtoken';
-import { TokenUserInfo, AppContext } from '../types';
+import { JwtUser, AppContext } from '../types';
 
-const getToken = (authorization: string): TokenUserInfo | null => {
+const getToken = (authorization: string): string => {
   if (authorization.toLowerCase().startsWith('bearer ')) {
-    const decodedToken: any = jwt.verify(
-      authorization.substring(7),
-      JWT_SECRET
-    );
-    return decodedToken;
+    return authorization.substring(7);
   } else {
-    return null;
+    return '';
   }
+};
+
+const decodeToken = (encodedToken: string): JwtUser => {
+  return jwt.verify(encodedToken, JWT_SECRET) as JwtUser;
 };
 
 const context = async ({ req }: { req: any }): Promise<AppContext> => {
   const getUser = async () => {
     try {
       const authorization = req.headers?.authorization || '';
-      const token = getToken(authorization);
+      const encodedToken = getToken(authorization);
+      const token = decodeToken(encodedToken);
       if (token) {
         const { id } = token;
         return User.findByPk(id);
       } else {
         return null;
       }
-    } catch (error) {
+    } catch (error: unknown) {
       throw new UserInputError(getErrorMessage(error), {
         invalidArgs: req.headers.authorization,
       });
