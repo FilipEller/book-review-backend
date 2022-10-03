@@ -108,7 +108,7 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError('not authenticated');
       }
-      const shelf: any = await Shelf.findByPk(shelfId); // getUserId not recognized with type Shelf
+      const shelf: any = await Shelf.findByPk(shelfId);
       if (currentUser.id != shelf?.getDataValue('userId')) {
         throw new ForbiddenError('not allowed');
       }
@@ -126,6 +126,30 @@ const resolvers = {
 
       return ShelfBook.create({ bookId, shelfId });
     },
+    removeBookFromShelf: async (
+      _: undefined,
+      { bookId, shelfId }: { bookId: string; shelfId: string },
+      context: AppContext
+    ) => {
+      const currentUser = await context.getUser();
+      if (!currentUser) {
+        throw new AuthenticationError('not authenticated');
+      }
+      const shelf: any = await Shelf.findByPk(shelfId);
+      if (currentUser.id != shelf?.getDataValue('userId')) {
+        throw new ForbiddenError('not allowed');
+      }
+
+      const booksInShelf: any = await ShelfBook.findAll({ where: { shelfId } });
+      const shelfBook = booksInShelf.find((x: any) => x.bookId == bookId)
+      if (shelfBook) {
+        await shelfBook.destroy()
+        console.log('destroyed')
+        return shelfBook
+      }
+
+      return null
+    },
     updateShelfName: async (
       _: undefined,
       { shelfId, newName }: { shelfId: string; newName: string },
@@ -138,7 +162,7 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError('not authenticated');
       }
-      const shelf: any = await Shelf.findByPk(shelfId); // getUserId not recognized with type Shelf
+      const shelf: any = await Shelf.findByPk(shelfId);
       if (currentUser.id != shelf?.getDataValue('userId')) {
         throw new ForbiddenError('not allowed');
       }
