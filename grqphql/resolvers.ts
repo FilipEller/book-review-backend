@@ -126,6 +126,26 @@ const resolvers = {
 
       return ShelfBook.create({ bookId, shelfId });
     },
+    updateShelfName: async (
+      _: undefined,
+      { shelfId, newName }: { shelfId: string; newName: string },
+      context: AppContext
+    ) => {
+      if (!newName.trim()) {
+        throw new UserInputError('new name cannot be empty');
+      }
+      const currentUser = await context.getUser();
+      if (!currentUser) {
+        throw new AuthenticationError('not authenticated');
+      }
+      const shelf: any = await Shelf.findByPk(shelfId); // getUserId not recognized with type Shelf
+      if (currentUser.id != shelf?.getDataValue('userId')) {
+        throw new ForbiddenError('not allowed');
+      }
+      shelf.name = newName;
+      await shelf.save();
+      return shelf;
+    },
   },
 };
 

@@ -65,6 +65,7 @@ const typeDefs = gql`
     login(username: String!, password: String!): Token
     createShelf(name: String!): Shelf
     addBookToShelf(bookId: String!, shelfId: String!): ShelfBook
+    updateShelfName(newName: String!, shelfId: String!): Shelf
   }
 `;
 
