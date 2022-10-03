@@ -113,6 +113,11 @@ const resolvers = {
         throw new ForbiddenError('not allowed');
       }
 
+      const booksInShelf: any = await ShelfBook.findAll({ where: { shelfId } });
+      if (booksInShelf.map((x: any) => x.bookId).includes(bookId)) {
+        throw new UserInputError('book already in the shelf');
+      }
+
       return ShelfBook.create({ bookId, shelfId });
     },
   },
