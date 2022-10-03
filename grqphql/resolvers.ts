@@ -118,6 +118,12 @@ const resolvers = {
         throw new UserInputError('book already in the shelf');
       }
 
+      let book: any = await Book.findByPk(bookId);
+      if (!book) {
+        book = await extBookService.fetchBook(bookId);
+        Book.create({ ...book });
+      }
+
       return ShelfBook.create({ bookId, shelfId });
     },
   },
