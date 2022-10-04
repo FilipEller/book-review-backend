@@ -11,7 +11,7 @@ Review.init(
       autoIncrement: true,
     },
     rating: {
-      type: DataTypes.REAL,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     content: {

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import urlencode from 'urlencode';
+import getErrorMessage from '../util/getErrorMessage';
 
 const extractBookData = (book: any) => {
   const { id, volumeInfo } = book;
@@ -30,20 +31,33 @@ const extractBookData = (book: any) => {
 
 const fetchBook = async (volumeId: string) => {
   // console.log('fetching', volumeId);
-  const result = await axios.get(
-    `https://www.googleapis.com/books/v1/volumes/${urlencode(volumeId)}`
-  );
-  return extractBookData(result.data);
+  try {
+    const result = await axios.get(
+      `https://www.googleapis.com/books/v1/volumes/${urlencode(volumeId)}`
+    );
+    // console.log({ result });
+    return extractBookData(result.data);
+  } catch (e: unknown) {
+    throw new Error(
+      'Error fetching external data: ' + getErrorMessage(e)
+    );
+  }
 };
 
 const fetchBooks = async (query: string) => {
   // console.log('fetching', query);
-  const result = await axios.get(
-    `https://www.googleapis.com/books/v1/volumes?q=${urlencode(
-      query
-    )}&maxResults=20`
-  );
-  return result.data.items.map(extractBookData);
+  try {
+    const result = await axios.get(
+      `https://www.googleapis.com/books/v1/volumes?q=${urlencode(
+        query
+      )}&maxResults=20`
+    );
+    return result.data.items.map(extractBookData);
+  } catch (e: unknown) {
+    throw new Error(
+      'Error fetching external data: ' + getErrorMessage(e)
+    );
+  }
 };
 
 export default { extractBookData, fetchBook, fetchBooks };

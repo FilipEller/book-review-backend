@@ -10,6 +10,15 @@ import getErrorMessage from '../util/getErrorMessage';
 import extBookService from '../services/extBooks';
 import { CreateUserArgs, LoginArgs, JwtUser, AppContext } from '../types';
 
+const findOrCreateBook = async (id: string) => {
+  let book: any = await Book.findByPk(id);
+  if (!book) {
+    book = await extBookService.fetchBook(id);
+    await Book.create({ ...book });
+  }
+  return book;
+};
+
 // n+1 problems with mixins
 const resolvers = {
   User: {
@@ -115,13 +124,12 @@ const resolvers = {
 
       const booksInShelf: any = await ShelfBook.findAll({ where: { shelfId } });
       if (booksInShelf.map((x: any) => x.bookId).includes(bookId)) {
-        throw new UserInputError('book already in the shelf');
+        throw new UserInputError('book already added');
       }
 
-      let book: any = await Book.findByPk(bookId);
+      const book = await findOrCreateBook(bookId);
       if (!book) {
-        book = await extBookService.fetchBook(bookId);
-        Book.create({ ...book });
+        throw new UserInputError('no such book');
       }
 
       return ShelfBook.create({ bookId, shelfId });
@@ -141,14 +149,14 @@ const resolvers = {
       }
 
       const booksInShelf: any = await ShelfBook.findAll({ where: { shelfId } });
-      const shelfBook = booksInShelf.find((x: any) => x.bookId == bookId)
+      const shelfBook = booksInShelf.find((x: any) => x.bookId == bookId);
       if (shelfBook) {
-        await shelfBook.destroy()
-        console.log('destroyed')
-        return shelfBook
+        await shelfBook.destroy();
+        console.log('destroyed');
+        return shelfBook;
       }
 
-      return null
+      return null;
     },
     updateShelfName: async (
       _: undefined,
@@ -169,6 +177,31 @@ const resolvers = {
       shelf.name = newName;
       await shelf.save();
       return shelf;
+    },
+    createReview: async (
+      _: undefined,
+      {
+        rating,
+        content,
+        bookId,
+      }: { rating: number; content: string; bookId: string },
+      context: AppContext
+    ) => {
+      const currentUser = await context.getUser();
+      if (!currentUser) {
+        throw new AuthenticationError('not authenticated');
+      }
+
+      const book = await findOrCreateBook(bookId);
+      if (!book) {
+        throw new UserInputError('no such book');
+      }
+      return await Review.create({
+        rating,
+        content,
+        userId: currentUser.id,
+        bookId,
+      });
     },
   },
 };

@@ -57,7 +57,6 @@ const main = async () => {
   await Promise.all(
     shelfBooks.map(async (shelfBook) => {
       const { shelfId, bookId } = shelfBook;
-      console.log({ shelfId, bookId });
       return ShelfBook.create({ shelfId, bookId });
     })
   );
@@ -65,7 +64,6 @@ const main = async () => {
   await Promise.all(
     reviews.map(async (shelfBook) => {
       const { rating, content, bookId, userId } = shelfBook;
-      console.log({ rating, content, bookId, userId });
       return Review.create({ rating, content, bookId, userId });
     })
   );

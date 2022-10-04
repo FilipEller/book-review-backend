@@ -39,10 +39,10 @@ const typeDefs = gql`
   }
   type Review {
     id: ID!
-    rating: Float
+    rating: Int!
     content: String
-    user: User
-    book: Book
+    user: User!
+    book: Book!
   }
   type ShelfBook {
     id: ID!
@@ -64,9 +64,10 @@ const typeDefs = gql`
     createUser(username: String!, name: String!, email: String!): User
     login(username: String!, password: String!): Token
     createShelf(name: String!): Shelf
-    addBookToShelf(bookId: String!, shelfId: String!): ShelfBook!
+    addBookToShelf(bookId: String!, shelfId: String!): ShelfBook
     removeBookFromShelf(bookId: String!, shelfId: String!): ShelfBook
-    updateShelfName(newName: String!, shelfId: String!): Shelf!
+    updateShelfName(newName: String!, shelfId: String!): Shelf
+    createReview(rating: Int!, content: String, bookId: String!): Review
   }
 `;
 
