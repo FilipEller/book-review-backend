@@ -35,6 +35,7 @@ const fetchBook = async (volumeId: string) => {
     const result = await axios.get(
       `https://www.googleapis.com/books/v1/volumes/${urlencode(volumeId)}`
     );
+    // fetching a nonexistent volume gets status code 503 for some reason
     // console.log({ result });
     return extractBookData(result.data);
   } catch (e: unknown) {

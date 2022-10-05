@@ -191,15 +191,22 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError('not authenticated');
       }
+      const userId = currentUser.id;
+
+      const review = await Review.findOne({ where: { userId, bookId } });
+      if (review) {
+        throw new UserInputError('book already reviewed');
+      }
 
       const book = await findOrCreateBook(bookId);
       if (!book) {
         throw new UserInputError('no such book');
       }
+
       return await Review.create({
         rating,
         content,
-        userId: currentUser.id,
+        userId,
         bookId,
       });
     },
