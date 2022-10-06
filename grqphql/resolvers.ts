@@ -213,6 +213,34 @@ const resolvers = {
         bookId,
       });
     },
+    editReview: async (
+      _: undefined,
+      {
+        rating,
+        content,
+        bookId,
+      }: { rating: number; content: string; bookId: string },
+      context: AppContext
+    ) => {
+      const currentUser = await context.getUser();
+      const userId = currentUser?.id;
+      if (!userId) {
+        throw new AuthenticationError('not authenticated');
+      }
+
+      const review: any = await Review.findOne({ where: { userId, bookId } });
+      if (!review) {
+        throw new UserInputError('book not reviewed');
+      }
+
+      if (rating) {
+        review.rating = rating
+      }
+      if (content) {
+        review.content = content
+      }
+      return review.save()
+    },
     removeReview: async (
       _: undefined,
       { bookId }: { bookId: string },
@@ -227,10 +255,6 @@ const resolvers = {
       const review: any = await Review.findOne({ where: { userId, bookId } });
       if (!review) {
         return null;
-      }
-
-      if (userId != review.getDataValue('userId')) {
-        throw new ForbiddenError('not allowed');
       }
 
       await review.destroy();

@@ -68,6 +68,7 @@ const typeDefs = gql`
     removeBookFromShelf(bookId: String!, shelfId: String!): ShelfBook
     updateShelfName(newName: String!, shelfId: String!): Shelf
     createReview(rating: Int!, content: String, bookId: String!): Review
+    editReview(rating: Int, content: String, bookId: String!): Review
     removeReview(bookId: String!): Review
   }
 `;
