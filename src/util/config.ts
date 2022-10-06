@@ -10,10 +10,11 @@ declare global {
       // DATABASE_NAME: string;
       // DATABASE_USERNAME: string;
       // DATABASE_PASSWORD: string;
+      NODE_ENV: string;
     }
   }
 }
 
-const { DATABASE_URL, JWT_SECRET } = process.env;
+const { DATABASE_URL, JWT_SECRET, NODE_ENV } = process.env;
 
-export { DATABASE_URL, JWT_SECRET };
+export { DATABASE_URL, JWT_SECRET, NODE_ENV };
