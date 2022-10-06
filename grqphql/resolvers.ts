@@ -46,7 +46,7 @@ const resolvers = {
       }
       return book;
     },
-    books: async (_: undefined, { query }: { query: string }) => {
+    books: async (_: undefined, { query }: { query: string | undefined }) => {
       if (query) {
         return extBookService.fetchBooks(query);
       } else {
@@ -58,7 +58,16 @@ const resolvers = {
     shelves: async () => Shelf.findAll(),
     user: async (_: undefined, { id }: { id: string }) => User.findByPk(id),
     users: async () => await User.findAll(),
-    reviews: async () => Review.findAll(),
+    reviews: async (
+      _: undefined,
+      { bookId }: { bookId: string | undefined }
+    ) => {
+      if (bookId) {
+        return Review.findAll({ where: { bookId } });
+      } else {
+        return Review.findAll();
+      }
+    },
     me: async (_: undefined, args: {}, context: AppContext) =>
       context.getUser(),
   },
@@ -151,7 +160,9 @@ const resolvers = {
         throw new ForbiddenError('not allowed');
       }
 
-      const shelfBook: any = await ShelfBook.findOne({ where: { shelfId, bookId } });
+      const shelfBook: any = await ShelfBook.findOne({
+        where: { shelfId, bookId },
+      });
       if (!shelfBook) {
         return null;
       }
@@ -234,12 +245,12 @@ const resolvers = {
       }
 
       if (rating) {
-        review.rating = rating
+        review.rating = rating;
       }
       if (content) {
-        review.content = content
+        review.content = content;
       }
-      return review.save()
+      return review.save();
     },
     removeReview: async (
       _: undefined,
