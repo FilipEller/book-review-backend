@@ -1,6 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 
-import { sequelize } from '../util/db';
+import { sequelize } from '../db';
 
 class ShelfBook extends Model {}
 

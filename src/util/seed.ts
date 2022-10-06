@@ -1,4 +1,4 @@
-import { sequelize } from './db';
+import { sequelize } from '../db';
 import { Book, User, Author, Shelf, ShelfBook, Review } from '../models';
 import { books, users, authors, shelves, shelfBooks, reviews } from './data';
 
