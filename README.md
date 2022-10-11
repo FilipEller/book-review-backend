@@ -1,3 +1,3 @@
-Uses a sqlite db.
+This is a personal project I am building to solidify the concepts I learn on University of Helsinki's Full Stack open course.
 
-Use https://github.com/graphql/dataloader to get rid of n+1
+The app is currently under heavy construction and it will first be a very simple version of Goodreads. Later on, I will try to add some features derived from my own ideas.
