@@ -1,9 +1,7 @@
-import { sequelize } from '../db';
 import { Book, User, Author, Shelf, ShelfBook, Review } from '../models';
 import { books, users, authors, shelves, shelfBooks, reviews } from './data';
 
-const main = async () => {
-  await sequelize.sync({ force: true });
+const runSeed = async () => {
   await Promise.all(
     books.map(async (b) => {
       const {
@@ -68,8 +66,6 @@ const main = async () => {
     })
   );
   console.log('Reviews added');
-  sequelize.close();
-  process.exit(0);
 };
 
-main();
+export { runSeed };
